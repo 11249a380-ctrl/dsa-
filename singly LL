@@ -1,0 +1,185 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+// Node structure
+struct Node {
+    int data;
+    struct Node* next;
+};
+
+struct Node* head = NULL;
+
+// Function to count nodes
+int count() {
+    struct Node* temp = head;
+    int c = 0;
+    while (temp != NULL) {
+        c++;
+        temp = temp->next;
+    }
+    return c;
+}
+
+// Function to display list
+void display() {
+    struct Node* temp = head;
+    if (temp == NULL) {
+        printf("List is empty.\n");
+        return;
+    }
+    printf("Linked List: ");
+    while (temp != NULL) {
+        printf("%d -> ", temp->data);
+        temp = temp->next;
+    }
+    printf("NULL\n");
+}
+
+// Insert at beginning
+void insertAtBeginning(int value) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    newNode->data = value;
+    newNode->next = head;
+    head = newNode;
+    printf("%d inserted at beginning.\n", value);
+}
+
+// Insert at end
+void insertAtEnd(int value) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    newNode->data = value;
+    newNode->next = NULL;
+    if (head == NULL) {
+        head = newNode;
+    } else {
+        struct Node* temp = head;
+        while (temp->next != NULL)
+            temp = temp->next;
+        temp->next = newNode;
+    }
+    printf("%d inserted at end.\n", value);
+}
+
+// Insert at position (1-based)
+void insertAtPosition(int value, int pos) {
+    if (pos < 1 || pos > count() + 1) {
+        printf("Invalid position.\n");
+        return;
+    }
+    if (pos == 1) {
+        insertAtBeginning(value);
+        return;
+    }
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    newNode->data = value;
+    struct Node* temp = head;
+    for (int i = 1; i < pos - 1; i++)
+        temp = temp->next;
+    newNode->next = temp->next;
+    temp->next = newNode;
+    printf("%d inserted at position %d.\n", value, pos);
+}
+
+// Delete from beginning
+void deleteFromBeginning() {
+    if (head == NULL) {
+        printf("List is empty.\n");
+        return;
+    }
+    struct Node* temp = head;
+    head = head->next;
+    printf("%d deleted from beginning.\n", temp->data);
+    free(temp);
+}
+
+// Delete from end
+void deleteFromEnd() {
+    if (head == NULL) {
+        printf("List is empty.\n");
+        return;
+    }
+    if (head->next == NULL) {
+        printf("%d deleted from end.\n", head->data);
+        free(head);
+        head = NULL;
+        return;
+    }
+    struct Node* temp = head;
+    while (temp->next->next != NULL)
+        temp = temp->next;
+    printf("%d deleted from end.\n", temp->next->data);
+    free(temp->next);
+    temp->next = NULL;
+}
+
+// Delete from specific position (1-based)
+void deleteFromPosition(int pos) {
+    if (pos < 1 || pos > count()) {
+        printf("Invalid position.\n");
+        return;
+    }
+    if (pos == 1) {
+        deleteFromBeginning();
+        return;
+    }
+    struct Node* temp = head;
+    for (int i = 1; i < pos - 1; i++)
+        temp = temp->next;
+    struct Node* del = temp->next;
+    temp->next = del->next;
+    printf("%d deleted from position %d.\n", del->data, pos);
+    free(del);
+}
+
+// Main menu
+int main() {
+    int choice, value, pos;
+
+    while (1) {
+        printf("\n--- Single Linked List Menu ---\n");
+        printf("1. Insert at Beginning\n");
+        printf("2. Insert at End\n");
+        printf("3. Insert at Position\n");
+        printf("4. Delete from Beginning\n");
+        printf("5. Delete from End\n");
+        printf("6. Delete from Position\n");
+        printf("7. Display\n");
+        printf("8. Count Nodes\n");
+        printf("9. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                printf("Enter value: ");
+                scanf("%d", &value);
+                insertAtBeginning(value);
+                break;
+            case 2:
+                printf("Enter value: ");
+                scanf("%d", &value);
+                insertAtEnd(value);
+                break;
+            case 3:
+                printf("Enter value: ");
+                scanf("%d", &value);
+                printf("Enter position: ");
+                scanf("%d", &pos);
+                insertAtPosition(value, pos);
+                break;
+            case 4:
+                deleteFromBeginning();
+                break;
+            case 5:
+                deleteFromEnd();
+                break;
+            case 6:
+                printf("Enter position: ");
+                scanf("%d", &pos);
+                deleteFromPosition(pos);
+                break;
+            case 7:
+                display();
+                break;
+            case 8:
+                printf("Total nodes: %d\n", count
